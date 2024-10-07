@@ -1,7 +1,20 @@
 import psycopg2 
-from miflora.miflora_poller import MiFloraPoller
-from btlewrap.pygatt import PygattBackend
+from pygatt.backends import GATTToolBackend
+import pygatt
+
+def getsensormac():
+    adapter = GATTToolBackend()
+
+    adapter.start()
+
+    devices = adapter.scan(timeout=15)
+    sensors = []
+
+    for device in devices:
+        if {device['name'] == "Flower care"}:
+            print(f"Device found: {device['address']} ({device['name']})")
+            sensors.append({device['address']})
+    print(sensors)
 
 
-
-print("Hello world")
+getsensormac()

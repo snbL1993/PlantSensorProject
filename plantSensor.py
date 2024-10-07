@@ -9,10 +9,11 @@ def getsensormac():
     adapter = GATTToolBackend()
 
     adapter.start()
-
+    #scan for BLE devices
     devices = adapter.scan(timeout=5)
     sensors = []
 
+    #only add macs of flower sensors
     for device in devices:
         if "Flower care" in str({device['name']}):
             print(f"Device found: {device['address']} ({device['name']})")

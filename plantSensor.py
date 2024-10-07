@@ -22,6 +22,8 @@ def getsensormac():
 def getsensordata(sensors: list):
     data = {}
     for sensormac in sensors:
+        sensormac = str(sensormac).replace('{','')
+        sensormac = sensormac.replace('}','')
         print(sensormac)
         poller = MiFloraPoller(sensormac, GATTToolBackend)
         data.update({sensormac:["this","is","a","test",1234]})

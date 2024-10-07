@@ -1,11 +1,11 @@
 import psycopg2 
 import miflora
 from miflora.miflora_poller import MiFloraPoller
-from pygatt.backends import GattToolBackend
+from pygatt.backends import GATTToolBackend
 import pygatt
 
 def getsensormac():
-    adapter = GattToolBackend()
+    adapter = GATTToolBackend()
 
     adapter.start()
 
@@ -22,9 +22,10 @@ def getsensormac():
 def getsensordata(sensors: list):
     data = {}
     for sensormac in sensors:
-        poller = MiFloraPoller(sensormac, GattToolBackend)
+        poller = MiFloraPoller(sensormac, GATTToolBackend)
         data.update({sensormac:["this","is","a","test",1234]})
-
+        
+    print(data)
 sensors = getsensormac()
 
 getsensordata(sensors)

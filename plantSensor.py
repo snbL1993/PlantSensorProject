@@ -9,7 +9,7 @@ def getsensormac():
 
     adapter.start()
 
-    devices = adapter.scan(timeout=15)
+    devices = adapter.scan(timeout=5)
     sensors = []
 
     for device in devices:
@@ -22,10 +22,16 @@ def getsensormac():
 def getsensordata(sensors: list):
     data = {}
     for sensormac in sensors:
+        print(sensormac)
         poller = MiFloraPoller(sensormac, GATTToolBackend)
         data.update({sensormac:["this","is","a","test",1234]})
-        
+
     print(data)
+
+
+####MAIN
+
+
 sensors = getsensormac()
 
 getsensordata(sensors)

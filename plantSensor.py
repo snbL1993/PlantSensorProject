@@ -12,7 +12,7 @@ def getsensormac():
 
     for device in devices:
         print({device['name']})
-        if {device['name'] == "Flower care"}:
+        if ({device['name']} == "{'Flower care'}"):
             print(f"Device found: {device['address']} ({device['name']})")
             sensors.append({device['address']})
     print(sensors)

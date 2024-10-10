@@ -35,7 +35,7 @@ def getsensordata(sensors: list):
         battery = poller.parameter_value('battery')
         data.update({sensormac:[temp,light,moisture,conductivity,battery]})
 
-    print(data)
+    return data
 
 def databasewrite(data: dir):
     print(data)
@@ -50,7 +50,7 @@ def databasewrite(data: dir):
 
     cur = conn.cursor()
     query_sensor_data = 'INSERT INTO {} VALUES(uuid_generate_v4(),now(),{},{},{},{},{},{});'
-    
+
     for mac, parameters in data:
         cur.execute(query_sensor_data.format("sensor_data",parameters[0],parameters[1],parameters[2],parameters[3],parameters[4],mac))
 

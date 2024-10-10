@@ -43,4 +43,5 @@ def getsensordata(sensors: list):
 
 sensors = getsensormac()
 
-getsensordata(sensors)
+data = getsensordata(sensors)
+print(data)

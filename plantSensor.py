@@ -50,8 +50,9 @@ def databasewrite(data: dir):
 
     cur = conn.cursor()
     query_sensor_data = 'INSERT INTO {} VALUES(uuid_generate_v4(),now(),{},{},{},{},{},{});'
-
-    cur.execute(query_sensor_data.format("sensor_data",11,22,33,44,55,"mac"))
+    
+    for mac, parameters in data:
+        cur.execute(query_sensor_data.format("sensor_data",parameters[0],parameters[1],parameters[2],parameters[3],parameters[4],mac))
 
     cur.close()
     conn.close()

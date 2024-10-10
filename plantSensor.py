@@ -19,41 +19,54 @@ def getsensormac():
             print(f"Device found: {device['address']} ({device['name']})")
             sensors.append({device['address']})
     
+    #return list of found macs
     return sensors
 
 def getsensordata(sensors: list):
     data = {}
     for sensormac in sensors:
+        print(f"Polling for mac: {sensormac} ")
+        #rewrite mac to needed format
         sensormac = str(sensormac).replace('{','')
         sensormac = sensormac.replace('}','')
-        
+
+        #polling for sensordata with btlewrap backend
         poller = MiFloraPoller(sensormac, mifloragatt)
         temp = poller.parameter_value('temperature')
         light = poller.parameter_value('light')
         moisture = poller.parameter_value('moisture')
         conductivity = poller.parameter_value('conductivity')
         battery = poller.parameter_value('battery')
+
+        #adding entry for each mac with polled parameters
         data.update({sensormac:[temp,light,moisture,conductivity,battery]})
 
+    
     return data
 
 def databasewrite(data: dict):
-    print(data)
+    
 
+    #postgres connection
     conn=psycopg2.connect(
         host="192.168.178.60",
         port= 5432,database="test_sensor",
         user="postgres",
         password="database"
         )
+    #automaticly commit the SQL querys
     conn.autocommit = True
-
     cur = conn.cursor()
+
+    #query to be filled with sensor data
     query_sensor_data = 'INSERT INTO {} VALUES(uuid_generate_v4(),now(),{},{},{},{},{},{});'
 
+    #execute SQL querys for each sensor
     for mac, parameters in data.items():
+        print(f"Inserting parameters into sensor_data for {mac}")
         cur.execute(query_sensor_data.format("sensor_data",parameters[0],parameters[1],parameters[2],parameters[3],parameters[4],mac))
 
+    #close connections 
     cur.close()
     conn.close()
 
@@ -67,3 +80,4 @@ sensors = getsensormac()
 data = getsensordata(sensors)
 
 databasewrite(data)
+print("Finished!")

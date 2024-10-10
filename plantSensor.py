@@ -65,4 +65,5 @@ def databasewrite(data: dir):
 sensors = getsensormac()
 
 data = getsensordata(sensors)
-print(data)
+
+databasewrite(data)

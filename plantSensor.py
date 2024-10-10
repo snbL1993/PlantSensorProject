@@ -18,7 +18,7 @@ def getsensormac():
         if "Flower care" in str({device['name']}):
             print(f"Device found: {device['address']} ({device['name']})")
             sensors.append({device['address']})
-    print(sensors)
+    
     return sensors
 
 def getsensordata(sensors: list):
@@ -26,7 +26,7 @@ def getsensordata(sensors: list):
     for sensormac in sensors:
         sensormac = str(sensormac).replace('{','')
         sensormac = sensormac.replace('}','')
-        print(sensormac)
+        
         poller = MiFloraPoller(sensormac, mifloragatt)
         temp = poller.parameter_value('temperature')
         light = poller.parameter_value('light')

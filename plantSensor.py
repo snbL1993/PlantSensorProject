@@ -25,7 +25,7 @@ def getsensormac():
 def getsensordata(sensors: list):
     data = {}
     for sensormac in sensors:
-        print(f"Polling for mac: {sensormac} ")
+        print(f"Polling sensor with mac: {sensormac} ")
         #rewrite mac to needed format
         sensormac = str(sensormac).replace('{','')
         sensormac = sensormac.replace('}','')

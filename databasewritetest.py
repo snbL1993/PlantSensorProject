@@ -11,9 +11,9 @@ conn =psycopg2.connect(
 conn.autocommit = True
 
 cur = conn.cursor()
-query_sensor_data = 'INSERT INTO {} VALUES(uuid_generate_v4(),now(),{},{},{},{},{});'
+query_sensor_data = 'INSERT INTO {} VALUES(uuid_generate_v4(),now(),{},{},{},{},{},{});'
 
-cur.execute(query_sensor_data.format("sensor_data",11,22,33,44,55))
+cur.execute(query_sensor_data.format("sensor_data",11,22,33,44,55,"mac"))
 
 cur.close()
 conn.close()

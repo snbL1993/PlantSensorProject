@@ -29,7 +29,11 @@ def getsensordata(sensors: list):
         print(sensormac)
         poller = MiFloraPoller(sensormac, mifloragatt)
         temp = poller.parameter_value('temperature')
-        data.update({sensormac:["this","is","a","test",temp]})
+        light = poller.parameter_value('light')
+        moisture = poller.parameter_value('moisture')
+        conductivity = poller.parameter_value('conductivity')
+        battery = poller.parameter_value('battery')
+        data.update({sensormac:[temp,light,moisture,conductivity,battery]})
 
     print(data)
 

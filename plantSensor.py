@@ -58,7 +58,8 @@ def databasewrite(data: dict):
     #postgres connection
     conn=psycopg2.connect(
         host="192.168.178.60",
-        port= 5432,database="test_sensor",
+        port= 5432,
+        database="test_sensor",
         user="postgres",
         password="database"
         )

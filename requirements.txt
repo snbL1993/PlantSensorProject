@@ -4,3 +4,4 @@ pygatt
 setuptools==75.1.0
 pexpect
 flask
+bluepy

@@ -86,6 +86,7 @@ def databasewrite(data: dict):
     cur.close()
     conn.close()
 
+    return "Successfully inserted data into database"
 
 
 ####Flask

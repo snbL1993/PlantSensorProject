@@ -32,7 +32,10 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser
-RUN apt-get update && apt-get install -y bluez && apt-get install -y python3-pip libglib2.0-dev
+RUN apt-get update && apt-get install -y \
+    bluez \
+    libbluetooth-dev \
+    pi-bluetooth
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.

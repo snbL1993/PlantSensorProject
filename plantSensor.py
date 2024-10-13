@@ -24,7 +24,10 @@ def getsensormac():
     return sensors
 
 def loadsensormac():
-    sensors = open("macadress.txt").readlines()
+    sensors = []
+    sensorsUnformatted = open("macadress.txt").readlines()
+    for item in sensorsUnformatted:
+        sensors.append(eval(item.strip()))
     return sensors
 
 def getsensordata(sensors: list):

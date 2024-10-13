@@ -34,8 +34,7 @@ RUN adduser \
     appuser
 RUN apt-get update && apt-get install -y \
     bluez \
-    libbluetooth-dev \
-    pi-bluetooth
+    libbluetooth-dev 
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.

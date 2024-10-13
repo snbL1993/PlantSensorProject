@@ -19,7 +19,7 @@ def getsensormac():
             if "Flower care" in str({device['name']}):
                 print(f"Device found: {device['address']} ({device['name']})")
                 sensors.append({device['address']})
-                macaddress.write(device + "\n")
+                macaddress.write({device['address']} + "\n")
         #return list of found macs
     return sensors
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch sensor data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Do you want to fetch MACs or fetch Data</h1>
+
+    <button onclick="triggerAction(1)">Mac</button>
+    <button onclick="triggerAction(2)">Data</button>
+
+    <div id="result"></div>
+
+    <script>
+        function triggerAction(buttonNumber) {
+            let endpoint = (buttonNumber === 1) ? '/button1' : '/button2';
+
+            fetch(endpoint, {method: 'POST'})
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = data.message;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

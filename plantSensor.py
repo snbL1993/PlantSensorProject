@@ -1,9 +1,13 @@
 import psycopg2 
 import miflora
+import pygatt
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
-import pygatt
+from flask import Flask, render_template, jsonify
+
+
+app = Flask(__name__)
 
 def getsensormac():
     adapter = GATTToolBackend()
@@ -11,17 +15,16 @@ def getsensormac():
     adapter.start()
     #scan for BLE devices
     devices = adapter.scan(timeout=5)
-    sensors = []
 
     with open("macadress.txt", "w") as macaddress:
         #only add macs of flower sensors
         for device in devices:
             if "Flower care" in str({device['name']}):
                 print(f"Device found: {device['address']} ({device['name']})")
-                sensors.append({device['address']})
+  
                 macaddress.write(str({device['address']}) + "\n")
         #return list of found macs
-    return sensors
+
 
 def loadsensormac():
     sensors = []
@@ -98,3 +101,34 @@ data = getsensordata(sensors)
 
 databasewrite(data)
 print("Finished!")
+
+
+
+def action_one():
+    getsensormac()
+    print('Fetched sensor macs')
+def action_two():
+    sensors = loadsensormac()
+    data = getsensordata(sensors)
+
+    databasewrite(data)
+    print("Finished!")
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# API endpoint for Button 1
+@app.route('/button1', methods=['POST'])
+def button1():
+    result = action_one()
+    return jsonify({"message": result})
+
+# API endpoint for Button 2
+@app.route('/button2', methods=['POST'])
+def button2():
+    result = action_two()
+    return jsonify({"message": result})
+
+if __name__ == '__main__':
+    app.run(debug=True)

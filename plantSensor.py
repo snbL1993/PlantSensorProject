@@ -23,6 +23,10 @@ def getsensormac():
         #return list of found macs
     return sensors
 
+def loadsensormac():
+    sensors = open("macadress.txt").readlines()
+    return sensors
+
 def getsensordata(sensors: list):
     data = {}
     for sensormac in sensors:
@@ -77,6 +81,10 @@ def databasewrite(data: dict):
 
 
 sensors = getsensormac()
+sensorstest = loadsensormac()
+
+print(sensors)
+print(sensorstest)
 
 data = getsensordata(sensors)
 

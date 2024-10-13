@@ -33,6 +33,7 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 RUN apt-get update && apt-get install -y \
+    sudo \
     bluez \
     libbluetooth-dev 
 

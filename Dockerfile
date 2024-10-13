@@ -16,6 +16,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
+#tell Flask the name of the script
+ENV FLASK_APP=plantSensor
+
 WORKDIR /app
 
 # Create a non-privileged user that the app will run under.
@@ -48,4 +51,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application.
-CMD ["python", "-m" , "flask", "run", "--app", "plantSensory.py", "--host=0.0.0.0", "--port=8000"]
+CMD ["python", "-m" , "flask", "run", "--host=0.0.0.0", "--port=8000"]

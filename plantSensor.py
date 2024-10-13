@@ -86,22 +86,6 @@ def databasewrite(data: dict):
 
 ####MAIN
 
-getNewMac = input("Do you want to fetch new MAC adresses? (y/n) ")
-if getNewMac == "y":
-    sensors = getsensormac()
-elif getNewMac == "n":
-    sensors = loadsensormac()
-else:
-    raise Exception("Only 'y' or 'n' is allowed as input!")
-
-print(sensors)
-
-
-data = getsensordata(sensors)
-
-databasewrite(data)
-print("Finished!")
-
 
 
 def action_one():

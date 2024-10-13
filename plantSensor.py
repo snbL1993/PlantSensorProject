@@ -15,26 +15,30 @@ def getsensormac():
     adapter.start()
     #scan for BLE devices
     devices = adapter.scan(timeout=5)
-
-    with open("macadress.txt", "w") as macaddress:
+    counter = 0
+    with open("macaddress.txt", "w") as macaddress:
         #only add macs of flower sensors
         for device in devices:
             if "Flower care" in str({device['name']}):
                 print(f"Device found: {device['address']} ({device['name']})")
   
                 macaddress.write(str({device['address']}) + "\n")
-        #return list of found macs
+                counter += 1
+    
+    return f"Found {counter} mac addresses"
 
 
 def loadsensormac():
     sensors = []
-    sensorsUnformatted = open("macadress.txt").readlines()
+    sensorsUnformatted = open("macaddress.txt").readlines()
     for item in sensorsUnformatted:
         sensors.append(eval(item.strip()))
     return sensors
 
 def getsensordata(sensors: list):
     data = {}
+    if not sensors:
+        raise Exception("Missing Macs, fetch Macs or add macaddress.txt")
     for sensormac in sensors:
         print(f"Polling sensor with mac: {sensormac} ")
         #rewrite mac to needed format
@@ -84,13 +88,14 @@ def databasewrite(data: dict):
 
 
 
-####MAIN
+####Flask
 
 
 
 def action_one():
     getsensormac()
     print('Fetched sensor macs')
+    return
 def action_two():
     sensors = loadsensormac()
     data = getsensordata(sensors)
@@ -113,6 +118,9 @@ def button1():
 def button2():
     result = action_two()
     return jsonify({"message": result})
+
+
+###MAIN
 
 if __name__ == '__main__':
     app.run()

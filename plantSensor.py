@@ -24,8 +24,8 @@ def getsensormac():
   
                 macaddress.write(str({device['address']}) + "\n")
                 counter += 1
-    
-    return f"Found {counter} mac addresses"
+    result = f"Found {counter} mac addresses"
+    return result
 
 
 def loadsensormac():
@@ -85,8 +85,8 @@ def databasewrite(data: dict):
     #close connections 
     cur.close()
     conn.close()
-
-    return "Successfully inserted data into database"
+    result = "Successfully inserted data into database"
+    return result
 
 
 ####Flask
@@ -97,6 +97,7 @@ def action_one():
     result = getsensormac()
     print('Fetched sensor macs')
     return result
+
 def action_two():
     sensors = loadsensormac()
     data = getsensordata(sensors)

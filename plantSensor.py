@@ -115,4 +115,4 @@ def button2():
     return jsonify({"message": result})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

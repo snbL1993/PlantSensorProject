@@ -94,15 +94,18 @@ def databasewrite(data: dict):
 
 
 def action_one():
-    getsensormac()
+    result = getsensormac()
     print('Fetched sensor macs')
-    return
+    return result
 def action_two():
     sensors = loadsensormac()
     data = getsensordata(sensors)
 
-    databasewrite(data)
+    result = databasewrite(data)
     print("Finished!")
+    return result
+
+
 
 @app.route('/')
 def index():

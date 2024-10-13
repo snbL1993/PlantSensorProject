@@ -48,4 +48,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application.
-CMD CMD ["/bin/bash"]
+CMD ["python". "./plantSensory.py"]

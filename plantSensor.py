@@ -13,13 +13,14 @@ def getsensormac():
     devices = adapter.scan(timeout=5)
     sensors = []
 
-    #only add macs of flower sensors
-    for device in devices:
-        if "Flower care" in str({device['name']}):
-            print(f"Device found: {device['address']} ({device['name']})")
-            sensors.append({device['address']})
-    
-    #return list of found macs
+    with open("macadress.txt", "w") as macaddress:
+        #only add macs of flower sensors
+        for device in devices:
+            if "Flower care" in str({device['name']}):
+                print(f"Device found: {device['address']} ({device['name']})")
+                sensors.append({device['address']})
+                macaddress.write(device + "\n")
+        #return list of found macs
     return sensors
 
 def getsensordata(sensors: list):

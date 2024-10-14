@@ -1,6 +1,7 @@
 import psycopg2 
 import miflora
 import pygatt
+import datetime
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
@@ -85,7 +86,8 @@ def databasewrite(data: dict):
     #close connections 
     cur.close()
     conn.close()
-    result = "Successfully inserted data into database"
+    current_time = str(datetime.datetime.now())
+    result = current_time + "Successfully inserted data into database"
     return result
 
 

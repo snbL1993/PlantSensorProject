@@ -87,7 +87,7 @@ def databasewrite(data: dict):
     cur.close()
     conn.close()
     current_time = str(datetime.datetime.now())
-    result = current_time + "Successfully inserted data into database"
+    result = current_time + "  Successfully inserted data into database"
     return result
 
 

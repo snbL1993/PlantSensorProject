@@ -128,11 +128,11 @@ def action_two():
 @app.route('/')
 def index():
    
-    dfOne = px.data.iris()  # Using a sample dataset from Plotly
+    dfOne = databaseread("sensor_data")
     
     # Create a Plotly figure
-    figOne = px.scatter(dfOne, x='sepal_width', y='sepal_length', color='species',
-                     title="Iris Dataset Scatter Plot")
+    figOne = px.scatter(dfOne, x='timeofdata', y='moisture', color='mac_address',
+                     title="Moisture Test")
     
     # Convert the figure to JSON
     graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)

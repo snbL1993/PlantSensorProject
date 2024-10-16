@@ -132,7 +132,7 @@ def index():
     
     # Create a Plotly figure
     figOne = px.line(dfOne, x='timeofdata', y='moisture', color='mac_address',
-                     title="Moisture Test")
+                     title="Moisture Test", markers=True)
     
     # Convert the figure to JSON
     graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)

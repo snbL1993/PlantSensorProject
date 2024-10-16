@@ -7,3 +7,4 @@ flask
 bluepy
 plotly
 pandas
+SQLAlchemy

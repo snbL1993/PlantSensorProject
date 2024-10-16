@@ -5,11 +5,11 @@ import datetime
 import json
 import plotly
 import plotly.express as px
+import pandas
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
 from flask import Flask, render_template, jsonify
-
 
 
 
@@ -65,7 +65,7 @@ def getsensordata(sensors: list):
     
     return data
 
-def databasewrite(data: dict):
+def databasewrite(data: dict,table :str):
     
 
     #postgres connection
@@ -86,7 +86,7 @@ def databasewrite(data: dict):
     #execute SQL querys for each sensor
     for mac, parameters in data.items():
         print(f"Inserting parameters into sensor_data for {mac}")
-        cur.execute(query_sensor_data.format("sensor_data",parameters[0],parameters[1],parameters[2],parameters[3],parameters[4],mac))
+        cur.execute(query_sensor_data.format(table,parameters[0],parameters[1],parameters[2],parameters[3],parameters[4],mac))
 
     #close connections 
     cur.close()
@@ -95,7 +95,17 @@ def databasewrite(data: dict):
     result = current_time + "  Successfully inserted data into database"
     return result
 
-
+def databaseread(table: str):
+    engine=psycopg2.connect(
+        host="192.168.178.60",
+        port= 5432,
+        database="test_sensor",
+        user="postgres",
+        password="database"
+        )
+    query = 'select * from {}'
+    df = pandas.read_sql(query.format(table), con=engine)
+    return df
 ####Flask
 
 
@@ -109,7 +119,7 @@ def action_two():
     sensors = loadsensormac()
     data = getsensordata(sensors)
 
-    result = databasewrite(data)
+    result = databasewrite(data,"sensor_data")
     print("Finished!")
     return result
 
@@ -118,17 +128,17 @@ def action_two():
 @app.route('/')
 def index():
    
-    df = px.data.iris()  # Using a sample dataset from Plotly
+    dfOne = px.data.iris()  # Using a sample dataset from Plotly
     
     # Create a Plotly figure
-    fig = px.scatter(df, x='sepal_width', y='sepal_length', color='species',
+    figOne = px.scatter(dfOne, x='sepal_width', y='sepal_length', color='species',
                      title="Iris Dataset Scatter Plot")
     
     # Convert the figure to JSON
-    graph_one_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
     
     # Pass the JSON to the template
-    return render_template('index.html', graph_one_json=graph_one_json)
+    return render_template('index.html', graph_one_json=graphOneJson)
 
 # API endpoint for Button 1
 @app.route('/button1', methods=['POST'])

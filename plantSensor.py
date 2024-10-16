@@ -131,7 +131,7 @@ def index():
     dfOne = databaseread("sensor_data")
     
     # Create a Plotly figure
-    figOne = px.scatter(dfOne, x='timeofdata', y='moisture', color='mac_address',
+    figOne = px.line(dfOne, x='timeofdata', y='moisture', color='mac_address',
                      title="Moisture Test")
     
     # Convert the figure to JSON

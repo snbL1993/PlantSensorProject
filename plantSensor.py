@@ -3,11 +3,13 @@ import miflora
 import pygatt
 import datetime
 import json
+import plotly
+import plotly.express as px
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
 from flask import Flask, render_template, jsonify
-import plotly.express as px
+
 
 
 

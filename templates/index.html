@@ -32,8 +32,8 @@
     <div id="result"></div>
     <div id="chart1"></div>
     <script>
-        var graph = {{ graph_json | safe }};
-        Plotly.newPlot('chart', graph);
+        var graph = JSON.parse('{{ graph_json | safe }}');
+        Plotly.newPlot('chart1', graph);
     </script>
     <script>
         function triggerAction(buttonNumber) {

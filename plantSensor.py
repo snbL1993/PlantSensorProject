@@ -2,10 +2,13 @@ import psycopg2
 import miflora
 import pygatt
 import datetime
+import json
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
 from flask import Flask, render_template, jsonify
+import plotly.express as px
+
 
 
 app = Flask(__name__)
@@ -112,7 +115,18 @@ def action_two():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+   
+    df = px.data.iris()  # Using a sample dataset from Plotly
+    
+    # Create a Plotly figure
+    fig = px.scatter(df, x='sepal_width', y='sepal_length', color='species',
+                     title="Iris Dataset Scatter Plot")
+    
+    # Convert the figure to JSON
+    graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    
+    # Pass the JSON to the template
+    return render_template('index.html', graph_json=graph_json)
 
 # API endpoint for Button 1
 @app.route('/button1', methods=['POST'])

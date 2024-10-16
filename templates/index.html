@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fetch sensor data</title>
+    <script src="{{ url_for('static', filename='plotly.min.js') }}"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,7 +30,11 @@
     <button onclick="triggerAction(2)">Data</button>
 
     <div id="result"></div>
-
+    <div id="chart1"></div>
+    <script>
+        var graph = {{ graph_json | safe }};
+        Plotly.newPlot('chart', graph);
+    </script>
     <script>
         function triggerAction(buttonNumber) {
             let endpoint = (buttonNumber === 1) ? '/button1' : '/button2';

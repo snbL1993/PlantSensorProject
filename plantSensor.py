@@ -21,7 +21,7 @@ def getsensormac():
     adapter.start()
     #scan for BLE devices
     devices = adapter.scan(timeout=5)
-    counter = 0
+    
     with open("macaddress.txt", "w") as macaddress:
         #only add macs of flower sensors
         for device in devices:
@@ -29,8 +29,8 @@ def getsensormac():
                 print(f"Device found: {device['address']} ({device['name']})")
   
                 macaddress.write(str({device['address']}) + "\n")
-                counter += 1
-    result = f"Found {counter} mac addresses"
+                
+    result = str(macaddress)
     return result
 
 

@@ -30,10 +30,10 @@
     <button onclick="triggerAction(2)">Data</button>
 
     <div id="result"></div>
-    <div id="chart1"></div>
+    <div id="chart_one"></div>
     <script>
-        var graph = JSON.parse('{{ graph_json | safe }}');
-        Plotly.newPlot('chart1', graph);
+        var graph = JSON.parse('{{ graph_one_json | safe }}');
+        Plotly.newPlot('chart_one', graph);
     </script>
     <script>
         function triggerAction(buttonNumber) {

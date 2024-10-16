@@ -125,10 +125,10 @@ def index():
                      title="Iris Dataset Scatter Plot")
     
     # Convert the figure to JSON
-    graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    graph_one_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     
     # Pass the JSON to the template
-    return render_template('index.html', graph_json=graph_json)
+    return render_template('index.html', graph_one_json=graph_one_json)
 
 # API endpoint for Button 1
 @app.route('/button1', methods=['POST'])

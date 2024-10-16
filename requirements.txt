@@ -6,3 +6,4 @@ pexpect
 flask
 bluepy
 plotly
+pandas

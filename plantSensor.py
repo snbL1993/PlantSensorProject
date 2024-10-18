@@ -117,6 +117,12 @@ def ongoingPolling(period: int):
         result = databasewrite(data,"sensor_data")
         print(result)
         time.sleep(period)
+
+def is_full_hour():
+    now = datetime.datetime.now()
+    return now.minute == 0 and now.second == 0
+    
+
 ####Flask
 
 
@@ -168,3 +174,7 @@ def button2():
 
 if __name__ == '__main__':
     app.run()
+
+#automaticly poll every 30 minutes from full hour
+if is_full_hour():
+    ongoingPolling(1800)

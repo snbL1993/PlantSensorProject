@@ -115,7 +115,7 @@ def databaseread(table: str):
     #    )
     
     engine= sqlalchemy.create_engine('postgresql://postgres:database@192.168.178.60:5432/test_sensor')
-    query = 'select * from {}'
+    query = "select * from '{}'"
     try:
         df = pandas.read_sql(query.format(table), con=engine)
         

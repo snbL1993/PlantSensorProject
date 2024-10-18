@@ -157,7 +157,7 @@ def action_two():
 def index():
    
     dfOne = databaseread("sensor_data")
-    
+    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
     # Create a Plotly figure
     figOne = px.line(dfOne, x='timeofdata', y='moisture', color='mac_address',
                      title="Moisture Test", markers=True)

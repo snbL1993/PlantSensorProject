@@ -8,6 +8,7 @@ import plotly.express as px
 import pandas
 import time
 import sqlalchemy
+import threading
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
@@ -133,10 +134,17 @@ def ongoingPolling(period: int):
         print(result)
         time.sleep(period)
 
-def is_full_hour():
+def isFullHour():
     now = datetime.datetime.now()
     return now.minute == 0 and now.second == 0
     
+def pollingStart():
+    while True:
+        if isFullHour():
+            print("Starting ongoing polling!!!")
+            ongoingPolling(1800)
+            break
+        time.sleep(1)
 
 ####Flask
 
@@ -188,13 +196,12 @@ def button2():
 ###MAIN
 
 if __name__ == '__main__':
+    #starting thread for continously polling before the flask app
+    polling_thread = threading.Thread(target=pollingStart)
+    polling_thread.daemon = True  # So that it exits when the main program exits
+    polling_thread.start()
+    
     app.run()
 
-    #automaticly poll every 30 minutes from full hour
-    while True:
-        if is_full_hour():
-            ongoingPolling(1800)
-            print("Starting ongoing polling!!!")
-            break
-        time.sleep(1)
+
         

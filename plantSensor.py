@@ -6,6 +6,7 @@ import json
 import plotly
 import plotly.express as px
 import pandas
+import time
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
@@ -107,6 +108,15 @@ def databaseread(table: str):
     query = 'select * from {}'
     df = pandas.read_sql(query.format(table), con=engine)
     return df
+
+
+def ongoingPolling(period: int):
+    while True:
+        sensors = loadsensormac()
+        data = getsensordata(sensors)
+        result = databasewrite(data,"sensor_data")
+        print(result)
+        time.sleep(period)
 ####Flask
 
 

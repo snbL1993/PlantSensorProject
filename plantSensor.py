@@ -7,6 +7,7 @@ import plotly
 import plotly.express as px
 import pandas
 import time
+import sqlalchemy
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
@@ -105,16 +106,19 @@ def databasewrite(data: dict,table :str):
     return result
 
 def databaseread(table: str):
-    engine=psycopg2.connect(
-        host="192.168.178.60",
-        port= 5432,
-        database="test_sensor",
-        user="postgres",
-        password="database"
-        )
+    #engine=psycopg2.connect(
+    #    host="192.168.178.60",
+    #    port= 5432,
+    #    database="test_sensor",
+    #    user="postgres",
+    #    password="database"
+    #    )
+    
+    engine= sqlalchemy.create_engine('postgresql://postgres:database@192.168.178.60:5432/test_sensor')
     query = 'select * from {}'
     try:
         df = pandas.read_sql(query.format(table), con=engine)
+        
     except:
         print("Could not read from database")
     

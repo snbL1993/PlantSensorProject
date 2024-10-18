@@ -24,46 +24,53 @@ def getsensormac():
     devices = adapter.scan(timeout=5)
     macaddressReturn = []
     with open("macaddress.txt", "w") as macaddress:
-        #only add macs of flower sensors
-        for device in devices:
-            if "Flower care" in str({device['name']}):
-                print(f"Device found: {device['address']} ({device['name']})")
-  
-                macaddress.write(str({device['address']}) + "\n")
-                macaddressReturn.append(str({device['address']}))
-                
+        try:
+            #only add macs of flower sensors
+            for device in devices:
+                if "Flower care" in str({device['name']}):
+                    print(f"Device found: {device['address']} ({device['name']})")
+    
+                    macaddress.write(str({device['address']}) + "\n")
+                    macaddressReturn.append(str({device['address']}))
+        except:
+            print("Could not write macs to file")        
     result = str(macaddressReturn)
     return result
 
 
 def loadsensormac():
-    sensors = []
-    sensorsUnformatted = open("macaddress.txt").readlines()
-    for item in sensorsUnformatted:
-        sensors.append(eval(item.strip()))
-    return sensors
+    try:
+        sensors = []
+        sensorsUnformatted = open("macaddress.txt").readlines()
+        for item in sensorsUnformatted:
+            sensors.append(eval(item.strip()))
+        return sensors
+    except:
+        print("Could not load macs from macaddress.txt")
 
 def getsensordata(sensors: list):
     data = {}
     if not sensors:
         raise Exception("Missing Macs, fetch Macs or add macaddress.txt")
-    for sensormac in sensors:
-        print(f"Polling sensor with mac: {sensormac} ")
-        #rewrite mac to needed format
-        sensormac = str(sensormac).replace('{','')
-        sensormac = sensormac.replace('}','')
+    try:
+        for sensormac in sensors:
+            print(f"Polling sensor with mac: {sensormac} ")
+            #rewrite mac to needed format
+            sensormac = str(sensormac).replace('{','')
+            sensormac = sensormac.replace('}','')
 
-        #polling for sensordata with btlewrap backend
-        poller = MiFloraPoller(sensormac, mifloragatt)
-        temp = poller.parameter_value('temperature')
-        light = poller.parameter_value('light')
-        moisture = poller.parameter_value('moisture')
-        conductivity = poller.parameter_value('conductivity')
-        battery = poller.parameter_value('battery')
+            #polling for sensordata with btlewrap backend
+            poller = MiFloraPoller(sensormac, mifloragatt)
+            temp = poller.parameter_value('temperature')
+            light = poller.parameter_value('light')
+            moisture = poller.parameter_value('moisture')
+            conductivity = poller.parameter_value('conductivity')
+            battery = poller.parameter_value('battery')
 
-        #adding entry for each mac with polled parameters
-        data.update({sensormac:[temp,light,moisture,conductivity,battery]})
-
+            #adding entry for each mac with polled parameters
+            data.update({sensormac:[temp,light,moisture,conductivity,battery]})
+    except:
+        print("Failed to poll data or write do database")
     
     return data
 
@@ -106,7 +113,11 @@ def databaseread(table: str):
         password="database"
         )
     query = 'select * from {}'
-    df = pandas.read_sql(query.format(table), con=engine)
+    try:
+        df = pandas.read_sql(query.format(table), con=engine)
+    except:
+        print("Could not read from database")
+    
     return df
 
 

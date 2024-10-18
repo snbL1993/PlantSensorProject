@@ -194,6 +194,7 @@ if __name__ == '__main__':
     while True:
         if is_full_hour():
             ongoingPolling(1800)
+            print("Starting ongoing polling!!!")
             break
         time.sleep(1)
         

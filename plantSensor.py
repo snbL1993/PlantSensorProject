@@ -139,12 +139,10 @@ def isFullHour():
     return now.minute == 0 and now.second == 0
     
 def pollingStart():
-    while True:
-        if isFullHour():
-            print("Starting ongoing polling!!!")
-            ongoingPolling(1800)
-            break
-        time.sleep(1)
+
+    print("Starting ongoing polling!!!")
+    ongoingPolling(1800)
+
 
 ####Flask
 

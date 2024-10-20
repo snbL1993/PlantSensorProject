@@ -16,10 +16,6 @@ services:
       context: .
     ports:
       - 8000:8000
-    devices:
-      - /dev/ttyAMA0:/dev/ttyAMA0
-    volumes:
-      - /var/run/dbus/:/var/run/dbus/:z
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

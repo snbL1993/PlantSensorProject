@@ -200,7 +200,9 @@ if __name__ == '__main__':
     polling_thread.start()
     print("Starting polling thread")
 
-    app.run()
+    time.sleep(5)
+
+    app.run(threaded=True)
 
 
         

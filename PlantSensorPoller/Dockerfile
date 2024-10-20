@@ -60,6 +60,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # Switch to the non-privileged user to run the application.
 #USER appuser
 
+# Set the working directory in the container
+WORKDIR /app
+
 # Copy the source code into the container.
 COPY . .
 
@@ -67,4 +70,4 @@ COPY . .
 EXPOSE 8000
 
 # Run the application.
-CMD ["python", "./plantSensorpoller.py"]
+CMD ["python", "./plantSensorPoller.py"]

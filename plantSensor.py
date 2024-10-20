@@ -198,7 +198,8 @@ if __name__ == '__main__':
     polling_thread = threading.Thread(target=pollingStart)
     polling_thread.daemon = True  # So that it exits when the main program exits
     polling_thread.start()
-    
+    print("Starting polling thread")
+
     app.run()
 
 

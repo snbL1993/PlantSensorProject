@@ -1,10 +1,10 @@
 services:
-  PlantSensorPage:
+  plantsensorpage:
     build: ./PlantSensorPage
     hostname: plantsensorpage
     ports:
       - 8000:8000
-  PlantSensorPoller:
+  plantsensorpoller:
     privileged: true
     network_mode: "host"
     ipc: "host"

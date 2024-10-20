@@ -17,7 +17,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 #tell Flask the name of the script
-ENV FLASK_APP=plantSensor
+ENV FLASK_APP=plantSensorPage
 
 WORKDIR /app
 

@@ -1,7 +1,7 @@
 services:
   PlantSensorPage:
     build: ./PlantSensorPage
-    hostname: PlantSensorPage
+    hostname: plantsensorpage
     ports:
       - 8000:8000
   PlantSensorPoller:
@@ -9,7 +9,7 @@ services:
     network_mode: "host"
     ipc: "host"
     build: ./PlantSensorPoller
-    hostname: PlantSensorPoller
+    hostname: plantsensorpoller
     ports:
       - 8001:8001
     devices:

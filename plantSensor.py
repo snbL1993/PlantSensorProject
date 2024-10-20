@@ -202,7 +202,7 @@ if __name__ == '__main__':
 
     time.sleep(5)
 
-    app.run(threaded=True)
+    app.run(threaded=True, use_reloader=False)
 
 
         

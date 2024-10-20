@@ -33,23 +33,6 @@ WORKDIR /app
 #    --uid "${UID}" \
 #    appuser
 
-#stuff for bluetooth
-RUN apt-get update && apt-get install -y \
-    gnupg2 \
-    dirmngr \
-    apt-transport-https \
-    ca-certificates
-
-RUN echo "deb http://archive.raspberrypi.org/debian/ buster main" | tee /etc/apt/sources.list.d/raspi.list
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 82B129927FA3303E
-
-RUN apt-get update && apt-get install -y \
-    pi-bluetooth \
-    sudo \
-    bluez \
-    libbluetooth-dev 
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
 # Download dependencies as a separate step to take advantage of Docker's caching.

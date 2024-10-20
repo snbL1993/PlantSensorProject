@@ -1,18 +1,10 @@
 import psycopg2 
-import miflora
-import pygatt
 import datetime
-import json
-import plotly
-import plotly.express as px
-import pandas
 import time
-import sqlalchemy
-import threading
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
-from flask import Flask, render_template, jsonify
+
 
 
 
@@ -124,13 +116,6 @@ def pollingStart():
 
     print("Starting ongoing polling!!!")
     ongoingPolling(1800)
-
-
-####Flask
-
-
-
-
 
 
 ###MAIN

@@ -137,12 +137,9 @@ def pollingStart():
 
 if __name__ == '__main__':
     #starting thread for continously polling before the flask app
-    polling_thread = threading.Thread(target=pollingStart)
-    polling_thread.daemon = True  # So that it exits when the main program exits
-    polling_thread.start()
+    pollingStart()
     print("Starting polling thread")
 
-    time.sleep(5)
 
 
 

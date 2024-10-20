@@ -1,0 +1,18 @@
+services:
+  PlantSensorPage:
+    build: ./PlantSensorPage
+    hostname: PlantSensorPage
+    ports:
+      - 8000:8000
+  PlantSensorPoller:
+    privileged: true
+    network_mode: "host"
+    ipc: "host"
+    build: ./PlantSensorPoller
+    hostname: PlantSensorPoller
+    ports:
+      - 8001:8001
+    devices:
+      - /dev/ttyAMA0:/dev/ttyAMA0
+    volumes:
+      - /var/run/dbus/:/var/run/dbus/:z

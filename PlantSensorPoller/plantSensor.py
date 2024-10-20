@@ -16,7 +16,7 @@ from flask import Flask, render_template, jsonify
 
 
 
-app = Flask(__name__)
+
 
 def getsensormac():
     adapter = GATTToolBackend()
@@ -106,24 +106,6 @@ def databasewrite(data: dict,table :str):
     result = current_time + "  Successfully inserted data into database"
     return result
 
-def databaseread(table: str):
-    #engine=psycopg2.connect(
-    #    host="192.168.178.60",
-    #    port= 5432,
-    #    database="test_sensor",
-    #    user="postgres",
-    #    password="database"
-    #    )
-    
-    engine= sqlalchemy.create_engine('postgresql://postgres:database@192.168.178.60:5432/test_sensor')
-    query = 'select * from {}'
-    try:
-        df = pandas.read_sql(query.format(table), con=engine)
-        
-    except:
-        print("Could not read from database")
-    
-    return df
 
 
 def ongoingPolling(period: int):
@@ -148,47 +130,7 @@ def pollingStart():
 
 
 
-def action_one():
-    result = getsensormac()
-    print('Fetched sensor macs')
-    return result
 
-def action_two():
-    sensors = loadsensormac()
-    data = getsensordata(sensors)
-
-    result = databasewrite(data,"sensor_data")
-    print("Finished!")
-    return result
-
-
-
-@app.route('/')
-def index():
-   
-    dfOne = databaseread("sensor_data")
-    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
-    # Create a Plotly figure
-    figOne = px.line(dfOne, x='timeofdata', y='moisture', color='mac_address',
-                     title="Moisture Test", markers=True)
-    
-    # Convert the figure to JSON
-    graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
-    
-    # Pass the JSON to the template
-    return render_template('index.html', graph_one_json=graphOneJson)
-
-# API endpoint for Button 1
-@app.route('/button1', methods=['POST'])
-def button1():
-    result = action_one()
-    return jsonify({"message": result})
-
-# API endpoint for Button 2
-@app.route('/button2', methods=['POST'])
-def button2():
-    result = action_two()
-    return jsonify({"message": result})
 
 
 ###MAIN
@@ -202,7 +144,7 @@ if __name__ == '__main__':
 
     time.sleep(5)
 
-    app.run(threaded=True, use_reloader=False)
+
 
 
         

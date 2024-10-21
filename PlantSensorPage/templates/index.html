@@ -26,8 +26,11 @@
 <body>
     <h1>Do you want to fetch MACs or fetch Data</h1>
 
-    <button onclick="triggerAction(1)">Mac</button>
-    <button onclick="triggerAction(2)">Data</button>
+    <button onclick="triggerAction(1)">moisture</button>
+    <button onclick="triggerAction(2)">light</button>
+    <button onclick="triggerAction(3)">temperature</button>
+    <button onclick="triggerAction(4)">conductivity</button>
+    <button onclick="triggerAction(5)">battery</button>
 
     <div id="result"></div>
     <div id="chart_one"></div>
@@ -37,8 +40,24 @@
     </script>
     <script>
         function triggerAction(buttonNumber) {
-            let endpoint = (buttonNumber === 1) ? '/button1' : '/button2';
-
+            let endpoint;
+            switch (buttonNumber) {
+                case 1:
+                    endpoint = '/button1';
+                    break;
+                case 2:
+                    endpoint = '/button2';
+                    break;
+                case 3:
+                    endpoint = '/button3';
+                    break;
+                case 4:
+                    endpoint = '/button4';
+                    break;
+                case 5:
+                    endpoint = '/button5';
+                    break;
+            }
             fetch(endpoint, {method: 'POST'})
             .then(response => response.json())
             .then(data => {

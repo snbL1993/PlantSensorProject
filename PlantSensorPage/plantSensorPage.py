@@ -31,11 +31,11 @@ def createPlotly(whichData :str):
     dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
     # Create a Plotly figure
     figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
-                     title="Moisture Test", markers=True)
+                     title=f"{whichData} Test", markers=True)
     
     # Convert the figure to JSON
     graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
-    return jsonify(message='Moisture data plotted successfully', graph=graphOneJson)
+    return jsonify(message=f'{whichData} data plotted successfully', graph=graphOneJson)
 
 def actionOne():
     plot = createPlotly('moisture')

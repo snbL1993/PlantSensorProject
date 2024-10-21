@@ -115,7 +115,7 @@ def isFullHour():
 def pollingStart():
 
     print("Starting ongoing polling!!!")
-    ongoingPolling(1800)
+    ongoingPolling(7200)
 
 
 ###MAIN

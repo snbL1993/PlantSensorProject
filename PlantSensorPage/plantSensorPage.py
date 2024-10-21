@@ -37,7 +37,7 @@ def actionOne():
     
     # Convert the figure to JSON
     graphTwoJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
-    return graphTwoJson
+    return jsonify(message='Moisture data plotted successfully', graph=graphTwoJson)
 
 def actionTwo():
 
@@ -77,8 +77,8 @@ def index():
 # API endpoint for Button 1
 @app.route('/button1', methods=['POST'])
 def button1():
-    result = actionOne()
-    return result
+    graphTwoJson = actionOne()
+    return graphTwoJson
 
 # API endpoint for Button 2
 @app.route('/button2', methods=['POST'])
@@ -96,8 +96,7 @@ def button3():
 @app.route('/button4', methods=['POST'])
 def button4():
     result = actionFour()
-    return jsonify({"message": 
-                    result})
+    return jsonify({"message":                     result})
 
 # API endpoint for Button 5
 @app.route('/button5', methods=['POST'])

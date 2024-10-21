@@ -70,10 +70,13 @@
             fetch(endpoint, {method: 'POST'})
             .then(response => response.json())
             .then(data => {
-                // Update graph with the data received from the server
-                var graph = data.graph;  // This is the JSON graph data
-                Plotly.newPlot('chart_two', graph);
-            })
+            // Update message
+            document.getElementById('result').textContent = data.message;
+
+            // Parse the Plotly graph data and plot it
+            var graph = JSON.parse(data.graph);
+            Plotly.newPlot('chart_two', graph.data, graph.layout);
+        })
             .catch(error => console.error('Error:', error));
         }
     </script>

@@ -34,10 +34,19 @@
 
     <div id="result"></div>
     <div id="chart_one"></div>
+    <div id="chart two"></div>
+
     <script>
         var graph = JSON.parse('{{ graph_one_json | safe }}');
         Plotly.newPlot('chart_one', graph);
     </script>
+
+    <script>
+        var graph = JSON.parse('{{ graph_two_json | safe }}');
+        Plotly.newPlot('chart_two', graph);
+    </script>
+
+
     <script>
         function triggerAction(buttonNumber) {
             let endpoint;
@@ -61,7 +70,9 @@
             fetch(endpoint, {method: 'POST'})
             .then(response => response.json())
             .then(data => {
-                document.getElementById('result').textContent = data.message;
+                // Update graph with the data received from the server
+                var graph = data.graph;  // This is the JSON graph data
+                Plotly.newPlot('chart_two', graph);
             })
             .catch(error => console.error('Error:', error));
         }

@@ -67,32 +67,32 @@ def index():
 # API endpoint for Button 1
 @app.route('/button1', methods=['POST'])
 def button1():
-    graphTwoJson = actionOne()
-    return graphTwoJson
+    graphJson = actionOne()
+    return graphJson
 
 # API endpoint for Button 2
 @app.route('/button2', methods=['POST'])
 def button2():
-    result = actionTwo()
-    return jsonify({"message": result})
+    graphJson = actionTwo()
+    return graphJson
 
 # API endpoint for Button 3
 @app.route('/button3', methods=['POST'])
 def button3():
-    result = actionThree()
-    return jsonify({"message": result})
+    graphJson = actionThree()
+    return graphJson
 
 # API endpoint for Button 4
 @app.route('/button4', methods=['POST'])
 def button4():
-    result = actionFour()
-    return jsonify({"message":                     result})
+    graphJson = actionFour()
+    return graphJson
 
 # API endpoint for Button 5
 @app.route('/button5', methods=['POST'])
 def button5():
-    result = actionFive()
-    return jsonify({"message": result})
+    graphJson = actionFive()
+    return graphJson
 
 
 

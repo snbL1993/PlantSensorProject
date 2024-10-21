@@ -36,33 +36,61 @@ def actionOne():
                      title="Moisture Test", markers=True)
     
     # Convert the figure to JSON
-    graphTwoJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
-    return jsonify(message='Moisture data plotted successfully', graph=graphTwoJson)
+    graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
+    return jsonify(message='Moisture data plotted successfully', graph=graphOneJson)
 
 def actionTwo():
-
-    result = "Currently not working!"
-    return result
+    whichData = 'light'
+    dfOne = databaseread("sensor_data")
+    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
+    # Create a Plotly figure
+    figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
+                     title="Light Test", markers=True)
+    
+    # Convert the figure to JSON
+    graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
+    return jsonify(message='Light data plotted successfully', graph=graphOneJson)
 
 def actionThree():
-
-    result = "Currently not working!"
-    return result
+    whichData = 'temperature'
+    dfOne = databaseread("sensor_data")
+    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
+    # Create a Plotly figure
+    figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
+                     title="Temperature Test", markers=True)
+    
+    # Convert the figure to JSON
+    graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
+    return jsonify(message='Temperature data plotted successfully', graph=graphOneJson)
 
 def actionFour():
-
-    result = "Currently not working!"
-    return result
+    whichData = 'conductivity'
+    dfOne = databaseread("sensor_data")
+    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
+    # Create a Plotly figure
+    figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
+                     title="Conductivity Test", markers=True)
+    
+    # Convert the figure to JSON
+    graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
+    return jsonify(message='Conductivity data plotted successfully', graph=graphOneJson)
 
 def actionFive():
-
-    result = "Currently not working!"
-    return result
+    whichData = 'battery'
+    dfOne = databaseread("sensor_data")
+    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
+    # Create a Plotly figure
+    figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
+                     title="Battery Test", markers=True)
+    
+    # Convert the figure to JSON
+    graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
+    return jsonify(message='Battery data plotted successfully', graph=graphOneJson)
 
 @app.route('/')
 def index():
     
-    
+
     # Pass the JSON to the template
     return render_template('index.html')
 

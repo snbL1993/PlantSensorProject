@@ -26,9 +26,7 @@ def databaseread(table: str):
     
     return df
 
-
-def actionOne():
-    whichData = 'moisture'
+def createPlotly(whichData :str):
     dfOne = databaseread("sensor_data")
     dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
     # Create a Plotly figure
@@ -38,6 +36,9 @@ def actionOne():
     # Convert the figure to JSON
     graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
     return jsonify(message='Moisture data plotted successfully', graph=graphOneJson)
+
+def actionOne():
+    plot = createPlotly('moisture')
 
 def actionTwo():
     whichData = 'light'

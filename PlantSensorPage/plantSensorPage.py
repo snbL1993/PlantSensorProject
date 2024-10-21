@@ -88,20 +88,20 @@ def button2():
 
 # API endpoint for Button 3
 @app.route('/button3', methods=['POST'])
-def button2():
+def button3():
     result = actionThree()
     return jsonify({"message": result})
 
 # API endpoint for Button 4
 @app.route('/button4', methods=['POST'])
-def button2():
+def button4():
     result = actionFour()
     return jsonify({"message": 
                     result})
 
 # API endpoint for Button 5
 @app.route('/button5', methods=['POST'])
-def button2():
+def button5():
     result = actionFive()
     return jsonify({"message": result})
 

@@ -39,6 +39,7 @@ def createPlotly(whichData :str):
 
 def actionOne():
     plot = createPlotly('moisture')
+    return plot
 
 def actionTwo():
     whichData = 'light'

@@ -36,7 +36,20 @@ def action_two():
     result = "Currently not working!"
     return result
 
+def action_three():
 
+    result = "Currently not working!"
+    return result
+
+def action_four():
+
+    result = "Currently not working!"
+    return result
+
+def action_five():
+
+    result = "Currently not working!"
+    return result
 
 @app.route('/')
 def index():
@@ -65,6 +78,24 @@ def button2():
     result = action_two()
     return jsonify({"message": result})
 
+# API endpoint for Button 3
+@app.route('/button3', methods=['POST'])
+def button2():
+    result = action_three()
+    return jsonify({"message": result})
+
+# API endpoint for Button 4
+@app.route('/button4', methods=['POST'])
+def button2():
+    result = action_four()
+    return jsonify({"message": 
+                    result})
+
+# API endpoint for Button 5
+@app.route('/button5', methods=['POST'])
+def button2():
+    result = action_five()
+    return jsonify({"message": result})
 
 if __name__ == '___main___':
     

@@ -34,12 +34,6 @@
 
     <div id="result"></div>
     <div id="chart_one"></div>
-    <div id="chart_two"></div>
-
-    <script>
-        var graph = JSON.parse('{{ graph_one_json | safe }}');
-        Plotly.newPlot('chart_one', graph);
-    </script>
 
 
     <script>
@@ -70,7 +64,7 @@
 
             // Parse the Plotly graph data and plot it
             var graph = JSON.parse(data.graph);
-            Plotly.newPlot('chart_two', graph.data, graph.layout);
+            Plotly.newPlot('chart_one', graph.data, graph.layout);
         })
             .catch(error => console.error('Error:', error));
         }

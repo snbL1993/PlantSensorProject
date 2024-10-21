@@ -61,18 +61,10 @@ def actionFive():
 
 @app.route('/')
 def index():
-    whichData = 'moisture'
-    dfOne = databaseread("sensor_data")
-    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
-    # Create a Plotly figure
-    figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
-                     title="Moisture Test", markers=True)
     
-    # Convert the figure to JSON
-    graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
     
     # Pass the JSON to the template
-    return render_template('index.html', graph_one_json=graphOneJson)
+    return render_template('index.html')
 
 # API endpoint for Button 1
 @app.route('/button1', methods=['POST'])

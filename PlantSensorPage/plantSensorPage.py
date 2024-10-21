@@ -27,26 +27,26 @@ def databaseread(table: str):
     return df
 
 
-def action_one():
+def actionOne():
     result = "Currently not working!"
     return result
 
-def action_two():
-
-    result = "Currently not working!"
-    return result
-
-def action_three():
+def actionTwo():
 
     result = "Currently not working!"
     return result
 
-def action_four():
+def actionThree():
 
     result = "Currently not working!"
     return result
 
-def action_five():
+def actionFour():
+
+    result = "Currently not working!"
+    return result
+
+def actionFive():
 
     result = "Currently not working!"
     return result
@@ -69,32 +69,32 @@ def index():
 # API endpoint for Button 1
 @app.route('/button1', methods=['POST'])
 def button1():
-    result = action_one()
+    result = actionOne()
     return jsonify({"message": result})
 
 # API endpoint for Button 2
 @app.route('/button2', methods=['POST'])
 def button2():
-    result = action_two()
+    result = actionTwo()
     return jsonify({"message": result})
 
 # API endpoint for Button 3
 @app.route('/button3', methods=['POST'])
 def button2():
-    result = action_three()
+    result = actionThree()
     return jsonify({"message": result})
 
 # API endpoint for Button 4
 @app.route('/button4', methods=['POST'])
 def button2():
-    result = action_four()
+    result = actionFour()
     return jsonify({"message": 
                     result})
 
 # API endpoint for Button 5
 @app.route('/button5', methods=['POST'])
 def button2():
-    result = action_five()
+    result = actionFive()
     return jsonify({"message": result})
 
 if __name__ == '___main___':

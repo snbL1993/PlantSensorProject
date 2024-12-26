@@ -30,7 +30,7 @@ def databaseread(table: str):
 def createPlotly(whichData :str):
     dfOne = databaseread("sensor_data")
     ###naming plants in plot
-    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter', '5c:85:7e:12:e4:f7' : 'Aloe'})
+    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter', '5c:85:7e:12:e4:f7' : 'Aloe', '5c:85:7e:12:dc:f6' : 'Farn'})
     # Create a Plotly figure
     figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
                      title=f"{whichData} Test", markers=True)

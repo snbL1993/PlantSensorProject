@@ -122,7 +122,7 @@ def pollingStart():
 
 if __name__ == '__main__':
     #starting thread for continously polling before the flask app
-    getsensormac()
+
     pollingStart()
     print("Starting polling thread")
     

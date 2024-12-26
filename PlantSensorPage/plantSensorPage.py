@@ -16,6 +16,7 @@ def databaseread(table: str):
     #    password="database"
     #    )
     
+    #using sqlalchemy to read from postgres database
     engine= sqlalchemy.create_engine('postgresql://postgres:database@192.168.178.60:5432/test_sensor')
     query = 'select * from {}'
     try:
@@ -28,7 +29,8 @@ def databaseread(table: str):
 
 def createPlotly(whichData :str):
     dfOne = databaseread("sensor_data")
-    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter'})
+    ###naming plants in plot
+    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter', '5c:85:7e:12:e4:f7' : 'Aloe'})
     # Create a Plotly figure
     figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
                      title=f"{whichData} Test", markers=True)
@@ -36,6 +38,8 @@ def createPlotly(whichData :str):
     # Convert the figure to JSON
     graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
     return jsonify(message=f'{whichData} data plotted successfully', graph=graphOneJson)
+
+#actions for buttons
 
 def actionOne():
     plot = createPlotly('moisture')
@@ -64,31 +68,31 @@ def index():
     # Pass the JSON to the template
     return render_template('index.html')
 
-# API endpoint for Button 1
+# API endpoint for Buttons
 @app.route('/button1', methods=['POST'])
 def button1():
     graphJson = actionOne()
     return graphJson
 
-# API endpoint for Button 2
+
 @app.route('/button2', methods=['POST'])
 def button2():
     graphJson = actionTwo()
     return graphJson
 
-# API endpoint for Button 3
+
 @app.route('/button3', methods=['POST'])
 def button3():
     graphJson = actionThree()
     return graphJson
 
-# API endpoint for Button 4
+
 @app.route('/button4', methods=['POST'])
 def button4():
     graphJson = actionFour()
     return graphJson
 
-# API endpoint for Button 5
+
 @app.route('/button5', methods=['POST'])
 def button5():
     graphJson = actionFive()

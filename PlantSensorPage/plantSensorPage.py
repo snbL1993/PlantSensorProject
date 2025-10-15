@@ -31,21 +31,21 @@ def databaseread(table: str):
 def createPlotly(whichData :str):
     data = databaseread("sensor_data")
 
-    ###only show last 4 weeks
-
+    #only show last 4 weeks
+    #ToDo: Make adjustable
     data['timeofdata'] = pandas.to_datetime(data['timeofdata'])
     cutoff = datetime.now() - timedelta(weeks=4)
     data = data[data['timeofdata'] >= cutoff]
 
-
-    ###naming plants in plot
+    #naming plants in plot
     data['mac_address'] = data['mac_address'].replace({
         '5c:85:7e:12:e2:b3' : 'Bogenhanf', 
         '5c:85:7e:12:e3:d3' : 'Rosablätter', 
         '5c:85:7e:12:e4:f7' : 'Aloe', 
         '5c:85:7e:12:dc:f6' : 'Farn'
         })
-    # Create a Plotly figure
+    
+    #create a Plotly figure
     figOne = px.line(
         data,
         x='timeofdata',
@@ -55,7 +55,7 @@ def createPlotly(whichData :str):
         markers=True
         )
     
-    # Convert the figure to JSON
+    #convert the figure to JSON
     graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
     return jsonify(message=f'{whichData} data plotted successfully', graph=graphOneJson)
 

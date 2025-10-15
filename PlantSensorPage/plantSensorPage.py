@@ -20,20 +20,31 @@ def databaseread(table: str):
     engine= sqlalchemy.create_engine('postgresql://postgres:database@192.168.178.60:5432/test_sensor')
     query = 'select * from {}'
     try:
-        df = pandas.read_sql(query.format(table), con=engine)
+        data = pandas.read_sql(query.format(table), con=engine)
         
     except:
         print("Could not read from database")
     
-    return df
+    return data
 
 def createPlotly(whichData :str):
-    dfOne = databaseread("sensor_data")
+    data = databaseread("sensor_data")
     ###naming plants in plot
-    dfOne['mac_address'] = dfOne['mac_address'].replace({'5c:85:7e:12:e2:b3' : 'Bogenhanf', '5c:85:7e:12:e3:d3' : 'Rosablätter', '5c:85:7e:12:e4:f7' : 'Aloe', '5c:85:7e:12:dc:f6' : 'Farn'})
+    data['mac_address'] = data['mac_address'].replace({
+        '5c:85:7e:12:e2:b3' : 'Bogenhanf', 
+        '5c:85:7e:12:e3:d3' : 'Rosablätter', 
+        '5c:85:7e:12:e4:f7' : 'Aloe', 
+        '5c:85:7e:12:dc:f6' : 'Farn'
+        })
     # Create a Plotly figure
-    figOne = px.line(dfOne, x='timeofdata', y=whichData, color='mac_address',
-                     title=f"{whichData} Test", markers=True)
+    figOne = px.line(
+        data,
+        x='timeofdata',
+        y=whichData, 
+        color='mac_address',
+        title=f"{whichData} Test", 
+        markers=True
+        )
     
     # Convert the figure to JSON
     graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)

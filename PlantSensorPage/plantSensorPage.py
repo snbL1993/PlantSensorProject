@@ -2,6 +2,7 @@ import json
 import plotly
 import plotly.express as px
 import pandas
+from datetime import datetime, timedelta
 import sqlalchemy
 from flask import Flask, render_template, jsonify
 
@@ -29,6 +30,14 @@ def databaseread(table: str):
 
 def createPlotly(whichData :str):
     data = databaseread("sensor_data")
+
+    ###only show last 4 weeks
+
+    data['timeofdata'] = pandas.to_datetime(data['timeofdata'])
+    cutoff = datetime.now() - timedelta(weeks=4)
+    data = data[data['timeofdata'] >= cutoff]
+
+
     ###naming plants in plot
     data['mac_address'] = data['mac_address'].replace({
         '5c:85:7e:12:e2:b3' : 'Bogenhanf', 

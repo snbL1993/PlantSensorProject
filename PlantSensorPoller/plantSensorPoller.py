@@ -46,8 +46,9 @@ def getsensordata(sensors: list):
     data = {}
     if not sensors:
         raise Exception("Missing Macs, fetch Macs or add macaddress.txt")
-    try:
-        for sensormac in sensors:
+
+    for sensormac in sensors:
+        try:
             print(f"Polling sensor with mac: {sensormac} ")
             #rewrite mac to needed format
             sensormac = str(sensormac).replace('{','')
@@ -60,11 +61,14 @@ def getsensordata(sensors: list):
             moisture = poller.parameter_value('moisture')
             conductivity = poller.parameter_value('conductivity')
             battery = poller.parameter_value('battery')
-
+        except:
+            print(f"Failed to poll data for mac: {sensormac}")
+        try:
             #adding entry for each mac with polled parameters
             data.update({sensormac:[temp,light,moisture,conductivity,battery]})
-    except:
-        print("Failed to poll data or write do database")
+        except:
+            print(f"Failed to write to database for mac: {sensormac} ")
+
     
     return data
 

@@ -74,34 +74,35 @@ def getsensordata(sensors: list):
 
 def databasewrite(data: dict,table :str):
     
+    try:
+        #postgres connection
+        conn=psycopg2.connect(
+            host="192.168.178.60",
+            port= 5432,
+            database="test_sensor",
+            user="postgres",
+            password="database"
+            )
+        #automaticly commit the SQL querys
+        conn.autocommit = True
+        cur = conn.cursor()
 
-    #postgres connection
-    conn=psycopg2.connect(
-        host="192.168.178.60",
-        port= 5432,
-        database="test_sensor",
-        user="postgres",
-        password="database"
-        )
-    #automaticly commit the SQL querys
-    conn.autocommit = True
-    cur = conn.cursor()
+        #query to be filled with sensor data
+        query_sensor_data = 'INSERT INTO {} VALUES(uuid_generate_v4(),now(),{},{},{},{},{},{});'
 
-    #query to be filled with sensor data
-    query_sensor_data = 'INSERT INTO {} VALUES(uuid_generate_v4(),now(),{},{},{},{},{},{});'
+        #execute SQL querys for each sensor
+        for mac, parameters in data.items():
+            print(f"Inserting parameters into sensor_data for {mac}")
+            cur.execute(query_sensor_data.format(table,parameters[0],parameters[1],parameters[2],parameters[3],parameters[4],mac))
 
-    #execute SQL querys for each sensor
-    for mac, parameters in data.items():
-        print(f"Inserting parameters into sensor_data for {mac}")
-        cur.execute(query_sensor_data.format(table,parameters[0],parameters[1],parameters[2],parameters[3],parameters[4],mac))
-
-    #close connections 
-    cur.close()
-    conn.close()
-    current_time = str(datetime.datetime.now())
-    result = current_time + "  Successfully inserted data into database"
-    return result
-
+        #close connections 
+        cur.close()
+        conn.close()
+        current_time = str(datetime.datetime.now())
+        result = current_time + "  Successfully inserted data into database"
+        return result
+    except:
+        print(f"Could not connect to postgres server. Please check if the server is up and running!")
 
 
 def ongoingPolling(period: int):

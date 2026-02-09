@@ -123,6 +123,6 @@ def button5():
 
 
 
-if __name__ == '___main___':
+if __name__ == '__main__':
     
     app.run(threaded=True, use_reloader=False)

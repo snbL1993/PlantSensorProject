@@ -40,9 +40,9 @@ def createPlotly(whichData :str):
     #naming plants in plot
     data['mac_address'] = data['mac_address'].replace({
         '5c:85:7e:12:e2:b3' : 'Bogenhanf', 
-        '5c:85:7e:12:e3:d3' : 'Rosablätter', 
+        '5c:85:7e:12:e3:d3' : 'Ficus Ginseng', 
         '5c:85:7e:12:e4:f7' : 'Aloe', 
-        '5c:85:7e:12:dc:f6' : 'Farn'
+        '5c:85:7e:12:dc:f6' : 'Monstera'
         })
     
     #create a Plotly figure

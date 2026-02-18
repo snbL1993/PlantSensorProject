@@ -4,6 +4,12 @@ services:
     hostname: plantsensorpage
     ports:
       - 8000:8000
+    environment:
+      - DB_HOST=192.168.178.60
+      - DB_PORT=5432
+      - DB_NAME=test_sensor
+      - DB_USER=postgres
+      - DB_PASS=database
   plantsensorpoller:
     privileged: true
     network_mode: "host"
@@ -16,3 +22,9 @@ services:
       - /dev/ttyAMA0:/dev/ttyAMA0
     volumes:
       - /var/run/dbus/:/var/run/dbus/:z
+    environment:
+      - DB_HOST=192.168.178.60
+      - DB_PORT=5432
+      - DB_NAME=test_sensor
+      - DB_USER=postgres
+      - DB_PASS=database

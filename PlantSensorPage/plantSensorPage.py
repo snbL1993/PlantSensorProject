@@ -19,6 +19,13 @@ DB_PASS = os.environ.get('DB_PASS', 'database')
 #create engine once at startup so the connection pool is reused across requests
 engine = sqlalchemy.create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
 
+PLANT_NAMES = {
+    '5c:85:7e:12:e2:b3': 'Bogenhanf',
+    '5c:85:7e:12:e3:d3': 'Ficus Ginseng',
+    '5c:85:7e:12:e4:f7': 'Aloe',
+    '5c:85:7e:12:dc:f6': 'Monstera',
+}
+
 def databaseread(table: str):
     #using sqlalchemy to read from postgres database
     query = 'select * from {}'
@@ -43,12 +50,7 @@ def createPlotly(whichData :str):
     data = data[data['timeofdata'] >= cutoff]
 
     #naming plants in plot
-    data['mac_address'] = data['mac_address'].replace({
-        '5c:85:7e:12:e2:b3' : 'Bogenhanf', 
-        '5c:85:7e:12:e3:d3' : 'Ficus Ginseng', 
-        '5c:85:7e:12:e4:f7' : 'Aloe', 
-        '5c:85:7e:12:dc:f6' : 'Monstera'
-        })
+    data['mac_address'] = data['mac_address'].replace(PLANT_NAMES)
     
     #create a Plotly figure
     figOne = px.line(
@@ -126,6 +128,27 @@ def button5():
 
 
 
+
+
+@app.route('/status', methods=['GET'])
+def status():
+    data = databaseread("sensor_data")
+    if data is None:
+        return jsonify(warnings=['Could not reach database']), 500
+
+    data['timeofdata'] = pandas.to_datetime(data['timeofdata'])
+    cutoff = datetime.now() - timedelta(hours=24)
+    last_seen = data.groupby('mac_address')['timeofdata'].max()
+
+    warnings = []
+    for mac, name in PLANT_NAMES.items():
+        if mac not in last_seen.index:
+            warnings.append(f"{name}: no data found in database")
+        elif last_seen[mac] < cutoff:
+            hours_ago = int((datetime.now() - last_seen[mac]) / timedelta(hours=1))
+            warnings.append(f"{name}: last reported {hours_ago}h ago — battery may be dead")
+
+    return jsonify(warnings=warnings)
 
 
 if __name__ == '__main__':

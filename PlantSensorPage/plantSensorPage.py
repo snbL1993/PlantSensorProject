@@ -1,4 +1,5 @@
 import json
+import os
 import plotly
 import plotly.express as px
 import pandas
@@ -8,28 +9,32 @@ from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
+#read credentials from environment variables so they are not hardcoded in source
+DB_HOST = os.environ.get('DB_HOST', '192.168.178.60')
+DB_PORT = os.environ.get('DB_PORT', '5432')
+DB_NAME = os.environ.get('DB_NAME', 'test_sensor')
+DB_USER = os.environ.get('DB_USER', 'postgres')
+DB_PASS = os.environ.get('DB_PASS', 'database')
+
+#create engine once at startup so the connection pool is reused across requests
+engine = sqlalchemy.create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
+
 def databaseread(table: str):
-    #engine=psycopg2.connect(
-    #    host="192.168.178.60",
-    #    port= 5432,
-    #    database="test_sensor",
-    #    user="postgres",
-    #    password="database"
-    #    )
-    
     #using sqlalchemy to read from postgres database
-    engine= sqlalchemy.create_engine('postgresql://postgres:database@192.168.178.60:5432/test_sensor')
     query = 'select * from {}'
+    data = None
     try:
         data = pandas.read_sql(query.format(table), con=engine)
-        
-    except:
-        print("Could not read from database")
-    
+
+    except Exception as e:
+        print(f"Could not read from database: {e}")
+
     return data
 
 def createPlotly(whichData :str):
     data = databaseread("sensor_data")
+    if data is None:
+        return jsonify(message='Could not read from database', graph=None), 500
 
     #only show last 4 weeks
     #ToDo: Make adjustable

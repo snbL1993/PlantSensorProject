@@ -65,13 +65,10 @@ def getsensordata(sensors: list):
             moisture = poller.parameter_value('moisture')
             conductivity = poller.parameter_value('conductivity')
             battery = poller.parameter_value('battery')
-        except Exception as e:
-            print(f"Failed to poll data for mac: {sensormac}: {e}")
-        try:
-            #adding entry for each mac with polled parameters
+            #only add to data if polling succeeded - if above raises, this line is skipped
             data.update({sensormac:[temp,light,moisture,conductivity,battery]})
         except Exception as e:
-            print(f"Failed to write to database for mac: {sensormac}: {e}")
+            print(f"Failed to poll sensor {sensormac}, skipping database write: {e}")
 
     
     return data

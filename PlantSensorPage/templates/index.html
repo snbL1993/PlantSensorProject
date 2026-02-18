@@ -35,12 +35,33 @@
             margin: 5px 0;
             padding-left: 20px;
         }
+        .range-btn {
+            padding: 6px 14px;
+            font-size: 14px;
+            margin: 4px;
+            cursor: pointer;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+        }
+        .range-btn.active {
+            background-color: #4a90d9;
+            color: white;
+            border-color: #3a7abf;
+        }
     </style>
 </head>
 <body>
     <h1>Max' Plant Sensor Dashboard</h1>
 
     <div id="warnings"></div>
+
+    <div>
+        <button class="range-btn active" onclick="setRange(this, 14)">2 weeks</button>
+        <button class="range-btn" onclick="setRange(this, 7)">1 week</button>
+        <button class="range-btn" onclick="setRange(this, 3)">3 days</button>
+        <button class="range-btn" onclick="setRange(this, 1)">1 day</button>
+    </div>
 
     <button onclick="triggerAction(1)">moisture</button>
     <button onclick="triggerAction(2)">light</button>
@@ -53,6 +74,14 @@
 
 
     <script>
+        let selectedDays = 14;
+
+        function setRange(btn, days) {
+            selectedDays = days;
+            document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
         // Check sensor status on page load and show warnings for silent sensors
         fetch('/status')
             .then(response => response.json())
@@ -84,7 +113,7 @@
                     endpoint = '/button5';
                     break;
             }
-            fetch(endpoint, {method: 'POST'})
+            fetch(`${endpoint}?days=${selectedDays}`, {method: 'POST'})
             .then(response => response.json())
             .then(data => {
             // Update message

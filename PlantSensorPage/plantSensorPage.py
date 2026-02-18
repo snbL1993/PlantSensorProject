@@ -5,7 +5,7 @@ import plotly.express as px
 import pandas
 from datetime import datetime, timedelta
 import sqlalchemy
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 
@@ -38,15 +38,15 @@ def databaseread(table: str):
 
     return data
 
-def createPlotly(whichData :str):
+ALLOWED_DAYS = {1, 3, 7, 14}
+
+def createPlotly(whichData: str, days: int):
     data = databaseread("sensor_data")
     if data is None:
         return jsonify(message='Could not read from database', graph=None), 500
 
-    #only show last 4 weeks
-    #ToDo: Make adjustable
     data['timeofdata'] = pandas.to_datetime(data['timeofdata'])
-    cutoff = datetime.now() - timedelta(weeks=4)
+    cutoff = datetime.now() - timedelta(days=days)
     data = data[data['timeofdata'] >= cutoff]
 
     #naming plants in plot
@@ -66,64 +66,40 @@ def createPlotly(whichData :str):
     graphOneJson = json.dumps(figOne, cls=plotly.utils.PlotlyJSONEncoder)
     return jsonify(message=f'{whichData} data plotted successfully', graph=graphOneJson)
 
-#actions for buttons
-
-def actionOne():
-    plot = createPlotly('moisture')
-    return plot
-
-def actionTwo():
-    plot = createPlotly('light')
-    return plot
-
-def actionThree():
-    plot = createPlotly('temperature')
-    return plot
-
-def actionFour():
-    plot = createPlotly('conductivity')
-    return plot
-
-def actionFive():
-    plot = createPlotly('battery')
-    return plot
+def get_days_param():
+    days = request.args.get('days', 14, type=int)
+    if days not in ALLOWED_DAYS:
+        days = 14
+    return days
 
 @app.route('/')
 def index():
-    
-
-    # Pass the JSON to the template
     return render_template('index.html')
 
 # API endpoint for Buttons
 @app.route('/button1', methods=['POST'])
 def button1():
-    graphJson = actionOne()
-    return graphJson
+    return createPlotly('moisture', get_days_param())
 
 
 @app.route('/button2', methods=['POST'])
 def button2():
-    graphJson = actionTwo()
-    return graphJson
+    return createPlotly('light', get_days_param())
 
 
 @app.route('/button3', methods=['POST'])
 def button3():
-    graphJson = actionThree()
-    return graphJson
+    return createPlotly('temperature', get_days_param())
 
 
 @app.route('/button4', methods=['POST'])
 def button4():
-    graphJson = actionFour()
-    return graphJson
+    return createPlotly('conductivity', get_days_param())
 
 
 @app.route('/button5', methods=['POST'])
 def button5():
-    graphJson = actionFive()
-    return graphJson
+    return createPlotly('battery', get_days_param())
 
 
 

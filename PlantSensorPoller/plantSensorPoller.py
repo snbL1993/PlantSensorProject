@@ -52,16 +52,14 @@ def getsensormac():
             adapter.stop()
 
         macaddressReturn = []
-        with open("macaddress.txt", "w") as macaddress:
-            for device in devices:
-                try:
-                    #only add macs of flower sensors
-                    if "Flower care" in device['name']:
-                        log.info(f"Device found: {device['address']} ({device['name']})")
-                        macaddress.write(device['address'] + "\n")
-                        macaddressReturn.append(device['address'])
-                except Exception as e:
-                    log.error(f"Could not process device {device}: {e}")
+        for device in devices:
+            try:
+                #only add macs of flower sensors
+                if "Flower care" in device['name']:
+                    log.info(f"Device found: {device['address']} ({device['name']})")
+                    macaddressReturn.append(device['address'])
+            except Exception as e:
+                log.error(f"Could not process device {device}: {e}")
         return macaddressReturn
 
 

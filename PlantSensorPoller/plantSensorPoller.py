@@ -16,6 +16,10 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+# Lock to prevent the polling loop and a manual scan from using the
+# Bluetooth adapter at the same time, which would cause both to fail.
+ble_lock = threading.Lock()
+
 api = Flask(__name__)
 
 @api.route('/scan', methods=['POST'])
@@ -38,25 +42,24 @@ DB_PASS = os.environ.get('DB_PASS', 'database')
 
 
 def getsensormac():
-    adapter = GATTToolBackend()
+    with ble_lock:
+        adapter = GATTToolBackend()
+        adapter.start()
+        #scan for BLE devices
+        devices = adapter.scan(timeout=5)
+        macaddressReturn = []
+        with open("macaddress.txt", "w") as macaddress:
+            try:
+                #only add macs of flower sensors
+                for device in devices:
+                    if "Flower care" in device['name']:
+                        log.info(f"Device found: {device['address']} ({device['name']})")
 
-    adapter.start()
-    #scan for BLE devices
-    devices = adapter.scan(timeout=5)
-    macaddressReturn = []
-    with open("macaddress.txt", "w") as macaddress:
-        try:
-            #only add macs of flower sensors
-            for device in devices:
-                if "Flower care" in device['name']:
-                    log.info(f"Device found: {device['address']} ({device['name']})")
-
-                    macaddress.write(device['address'] + "\n")
-                    macaddressReturn.append(device['address'])
-        except Exception as e:
-            log.error(f"Could not write macs to file: {e}")        
-    result = str(macaddressReturn)
-    return result
+                        macaddress.write(device['address'] + "\n")
+                        macaddressReturn.append(device['address'])
+            except Exception as e:
+                log.error(f"Could not write macs to file: {e}")
+        return macaddressReturn
 
 
 def loadsensormac():
@@ -75,22 +78,22 @@ def getsensordata(sensors: list):
     if not sensors:
         raise Exception("Missing Macs, fetch Macs or add macaddress.txt")
 
-    for sensormac in sensors:
-        try:
-            log.info(f"Polling sensor with mac: {sensormac}")
-            #polling for sensordata with btlewrap backend
-            poller = MiFloraPoller(sensormac, mifloragatt)
-            temp = poller.parameter_value('temperature')
-            light = poller.parameter_value('light')
-            moisture = poller.parameter_value('moisture')
-            conductivity = poller.parameter_value('conductivity')
-            battery = poller.parameter_value('battery')
-            #only add to data if polling succeeded - if above raises, this line is skipped
-            data.update({sensormac:[temp,light,moisture,conductivity,battery]})
-        except Exception as e:
-            log.error(f"Failed to poll sensor {sensormac}, skipping database write: {e}")
+    with ble_lock:
+        for sensormac in sensors:
+            try:
+                log.info(f"Polling sensor with mac: {sensormac}")
+                #polling for sensordata with btlewrap backend
+                poller = MiFloraPoller(sensormac, mifloragatt)
+                temp = poller.parameter_value('temperature')
+                light = poller.parameter_value('light')
+                moisture = poller.parameter_value('moisture')
+                conductivity = poller.parameter_value('conductivity')
+                battery = poller.parameter_value('battery')
+                #only add to data if polling succeeded - if above raises, this line is skipped
+                data.update({sensormac:[temp,light,moisture,conductivity,battery]})
+            except Exception as e:
+                log.error(f"Failed to poll sensor {sensormac}, skipping database write: {e}")
 
-    
     return data
 
 def databasewrite(data: dict,table :str):

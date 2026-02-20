@@ -111,7 +111,12 @@ def button5():
 def scan():
     try:
         response = requests.post(f'http://{DB_HOST}:8001/scan', timeout=60)
-        return jsonify(response.json())
+        macs = response.json().get('macs', [])
+        # older poller versions returned macs as a str like "['aa:bb:...']"
+        if isinstance(macs, str):
+            import ast
+            macs = ast.literal_eval(macs)
+        return jsonify(macs=macs)
     except Exception as e:
         return jsonify(error=f'Scan failed: {e}'), 500
 

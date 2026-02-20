@@ -49,6 +49,7 @@ def loadsensormac():
         return sensors
     except Exception as e:
         print(f"Could not load macs from macaddress.txt: {e}")
+        return []
 
 def getsensordata(sensors: list):
     data = {}
@@ -108,10 +109,13 @@ def databasewrite(data: dict,table :str):
 
 def ongoingPolling(period: int):
     while True:
-        sensors = loadsensormac()
-        data = getsensordata(sensors)
-        result = databasewrite(data,"sensor_data")
-        print(result)
+        try:
+            sensors = loadsensormac()
+            data = getsensordata(sensors)
+            result = databasewrite(data,"sensor_data")
+            print(result)
+        except Exception as e:
+            print(f"Polling cycle failed, will retry in {period}s: {e}")
         time.sleep(period)
 
 def pollingStart():

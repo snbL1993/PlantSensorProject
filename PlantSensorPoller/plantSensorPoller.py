@@ -1,10 +1,18 @@
 import os
+import logging
 import psycopg2
 import datetime
 import time
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+log = logging.getLogger(__name__)
 
 #read credentials from environment variables so they are not hardcoded in source
 DB_HOST = os.environ.get('DB_HOST', '192.168.178.60')
@@ -30,12 +38,12 @@ def getsensormac():
             #only add macs of flower sensors
             for device in devices:
                 if "Flower care" in device['name']:
-                    print(f"Device found: {device['address']} ({device['name']})")
+                    log.info(f"Device found: {device['address']} ({device['name']})")
 
                     macaddress.write(device['address'] + "\n")
                     macaddressReturn.append(device['address'])
         except Exception as e:
-            print(f"Could not write macs to file: {e}")        
+            log.error(f"Could not write macs to file: {e}")        
     result = str(macaddressReturn)
     return result
 
@@ -48,7 +56,7 @@ def loadsensormac():
             sensors.append(item.strip())
         return sensors
     except Exception as e:
-        print(f"Could not load macs from macaddress.txt: {e}")
+        log.error(f"Could not load macs from macaddress.txt: {e}")
         return []
 
 def getsensordata(sensors: list):
@@ -58,7 +66,7 @@ def getsensordata(sensors: list):
 
     for sensormac in sensors:
         try:
-            print(f"Polling sensor with mac: {sensormac} ")
+            log.info(f"Polling sensor with mac: {sensormac}")
             #polling for sensordata with btlewrap backend
             poller = MiFloraPoller(sensormac, mifloragatt)
             temp = poller.parameter_value('temperature')
@@ -69,7 +77,7 @@ def getsensordata(sensors: list):
             #only add to data if polling succeeded - if above raises, this line is skipped
             data.update({sensormac:[temp,light,moisture,conductivity,battery]})
         except Exception as e:
-            print(f"Failed to poll sensor {sensormac}, skipping database write: {e}")
+            log.error(f"Failed to poll sensor {sensormac}, skipping database write: {e}")
 
     
     return data
@@ -94,7 +102,7 @@ def databasewrite(data: dict,table :str):
 
         #execute SQL querys for each sensor
         for mac, parameters in data.items():
-            print(f"Inserting parameters into sensor_data for {mac}")
+            log.info(f"Inserting parameters into sensor_data for {mac}")
             cur.execute(query_sensor_data, (parameters[0],parameters[1],parameters[2],parameters[3],parameters[4],mac))
 
         #close connections 
@@ -104,7 +112,7 @@ def databasewrite(data: dict,table :str):
         result = current_time + "  Successfully inserted data into database"
         return result
     except Exception as e:
-        print(f"Could not connect to postgres server. Please check if the server is up and running! Error: {e}")
+        log.error(f"Could not connect to postgres server. Please check if the server is up and running! Error: {e}")
 
 
 def ongoingPolling(period: int):
@@ -113,14 +121,14 @@ def ongoingPolling(period: int):
             sensors = loadsensormac()
             data = getsensordata(sensors)
             result = databasewrite(data,"sensor_data")
-            print(result)
+            log.info(result)
         except Exception as e:
-            print(f"Polling cycle failed, will retry in {period}s: {e}")
+            log.error(f"Polling cycle failed, will retry in {period}s: {e}")
         time.sleep(period)
 
 def pollingStart():
 
-    print("Starting ongoing polling!!!")
+    log.info("Starting ongoing polling!!!")
     ongoingPolling(7200)
 
 

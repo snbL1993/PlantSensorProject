@@ -1,5 +1,6 @@
 import json
 import os
+import requests
 import plotly
 import plotly.express as px
 import pandas
@@ -104,6 +105,15 @@ def button5():
 
 
 
+
+
+@app.route('/scan', methods=['POST'])
+def scan():
+    try:
+        response = requests.post(f'http://{DB_HOST}:8001/scan', timeout=60)
+        return jsonify(response.json())
+    except Exception as e:
+        return jsonify(error=f'Scan failed: {e}'), 500
 
 
 @app.route('/status', methods=['GET'])

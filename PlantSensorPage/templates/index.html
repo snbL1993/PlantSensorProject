@@ -49,12 +49,23 @@
             color: white;
             border-color: #3a7abf;
         }
+        #scan-result {
+            margin: 10px auto;
+            max-width: 600px;
+            font-size: 15px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <h1>Max' Plant Sensor Dashboard</h1>
 
     <div id="warnings"></div>
+
+    <div>
+        <button onclick="triggerScan(this)">Scan for sensors</button>
+    </div>
+    <div id="scan-result"></div>
 
     <div>
         <button class="range-btn active" onclick="setRange(this, 14)">2 weeks</button>
@@ -74,6 +85,32 @@
 
 
     <script>
+        function triggerScan(btn) {
+            const resultDiv = document.getElementById('scan-result');
+            btn.disabled = true;
+            btn.textContent = 'Scanning… (this can take up to 30s)';
+            resultDiv.textContent = '';
+
+            fetch('/scan', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        resultDiv.textContent = 'Error: ' + data.error;
+                    } else if (data.macs && data.macs.length > 0) {
+                        resultDiv.textContent = 'Found sensors: ' + data.macs.join(', ');
+                    } else {
+                        resultDiv.textContent = 'No sensors found.';
+                    }
+                })
+                .catch(error => {
+                    resultDiv.textContent = 'Error: ' + error;
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = 'Scan for sensors';
+                });
+        }
+
         let selectedDays = 14;
 
         function setRange(btn, days) {

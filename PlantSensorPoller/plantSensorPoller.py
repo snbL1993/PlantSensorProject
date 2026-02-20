@@ -1,8 +1,10 @@
 import os
 import logging
+import threading
 import psycopg2
 import datetime
 import time
+from flask import Flask, jsonify
 from miflora.miflora_poller import MiFloraPoller
 from btlewrap.gatttool import GatttoolBackend as mifloragatt
 from pygatt.backends import GATTToolBackend
@@ -13,6 +15,15 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 log = logging.getLogger(__name__)
+
+api = Flask(__name__)
+
+@api.route('/scan', methods=['POST'])
+def scan():
+    log.info("BLE scan requested via API")
+    macs = getsensormac()
+    log.info(f"BLE scan complete, found: {macs}")
+    return jsonify(macs=macs)
 
 #read credentials from environment variables so they are not hardcoded in source
 DB_HOST = os.environ.get('DB_HOST', '192.168.178.60')
@@ -135,6 +146,11 @@ def pollingStart():
 ###MAIN
 
 if __name__ == '__main__':
+    api_thread = threading.Thread(
+        target=lambda: api.run(host='0.0.0.0', port=8001, use_reloader=False),
+        daemon=True
+    )
+    api_thread.start()
     pollingStart()
     
 

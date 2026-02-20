@@ -45,20 +45,23 @@ def getsensormac():
     with ble_lock:
         adapter = GATTToolBackend()
         adapter.start()
-        #scan for BLE devices
-        devices = adapter.scan(timeout=5)
+        try:
+            #scan for BLE devices - 15s gives sensors enough time to advertise
+            devices = adapter.scan(timeout=15)
+        finally:
+            adapter.stop()
+
         macaddressReturn = []
         with open("macaddress.txt", "w") as macaddress:
-            try:
-                #only add macs of flower sensors
-                for device in devices:
+            for device in devices:
+                try:
+                    #only add macs of flower sensors
                     if "Flower care" in device['name']:
                         log.info(f"Device found: {device['address']} ({device['name']})")
-
                         macaddress.write(device['address'] + "\n")
                         macaddressReturn.append(device['address'])
-            except Exception as e:
-                log.error(f"Could not write macs to file: {e}")
+                except Exception as e:
+                    log.error(f"Could not process device {device}: {e}")
         return macaddressReturn
 
 

@@ -1,6 +1,7 @@
 services:
   plantsensorpage:
     build: ./PlantSensorPage
+    restart: unless-stopped
     hostname: plantsensorpage
     ports:
       - 8000:8000
@@ -15,6 +16,7 @@ services:
     network_mode: "host"
     ipc: "host"
     build: ./PlantSensorPoller
+    restart: unless-stopped
     hostname: plantsensorpoller
     ports:
       - 8001:8001

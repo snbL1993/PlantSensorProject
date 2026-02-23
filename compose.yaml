@@ -30,3 +30,4 @@ services:
       - DB_NAME=test_sensor
       - DB_USER=postgres
       - DB_PASS=database
+      - BLE_ADAPTER=hci1

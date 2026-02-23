@@ -35,6 +35,7 @@ DB_PORT = os.environ.get('DB_PORT', '5432')
 DB_NAME = os.environ.get('DB_NAME', 'test_sensor')
 DB_USER = os.environ.get('DB_USER', 'postgres')
 DB_PASS = os.environ.get('DB_PASS', 'database')
+BLE_ADAPTER = os.environ.get('BLE_ADAPTER', 'hci0')
 
 
 
@@ -43,7 +44,7 @@ DB_PASS = os.environ.get('DB_PASS', 'database')
 
 def getsensormac():
     with ble_lock:
-        adapter = GATTToolBackend()
+        adapter = GATTToolBackend(hci_device=BLE_ADAPTER)
         adapter.start()
         try:
             #scan for BLE devices - 15s gives sensors enough time to advertise
@@ -84,7 +85,7 @@ def getsensordata(sensors: list):
             try:
                 log.info(f"Polling sensor with mac: {sensormac}")
                 #polling for sensordata with btlewrap backend
-                poller = MiFloraPoller(sensormac, mifloragatt)
+                poller = MiFloraPoller(sensormac, mifloragatt, adapter=BLE_ADAPTER)
                 temp = poller.parameter_value('temperature')
                 light = poller.parameter_value('light')
                 moisture = poller.parameter_value('moisture')

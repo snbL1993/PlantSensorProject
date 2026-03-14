@@ -29,6 +29,15 @@ def scan():
     log.info(f"BLE scan complete, found: {macs}")
     return jsonify(macs=macs)
 
+@api.route('/poll', methods=['POST'])
+def poll():
+    log.info("Manual poll requested via API")
+    sensors = loadsensormac()
+    data = getsensordata(sensors)
+    databasewrite(data, "sensor_data")
+    log.info(f"Manual poll complete, polled {len(data)} sensor(s)")
+    return jsonify(polled=len(data), macs=list(data.keys()))
+
 #read credentials from environment variables so they are not hardcoded in source
 DB_HOST = os.environ.get('DB_HOST', '192.168.178.60')
 DB_PORT = os.environ.get('DB_PORT', '5432')

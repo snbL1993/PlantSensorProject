@@ -107,6 +107,15 @@ def button5():
 
 
 
+@app.route('/poll', methods=['POST'])
+def poll():
+    try:
+        response = requests.post(f'http://{DB_HOST}:8001/poll', timeout=300)
+        return jsonify(response.json())
+    except Exception as e:
+        return jsonify(error=f'Poll failed: {e}'), 500
+
+
 @app.route('/scan', methods=['POST'])
 def scan():
     try:

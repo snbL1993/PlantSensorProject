@@ -64,6 +64,7 @@
 
     <div>
         <button onclick="triggerScan(this)">Scan for sensors</button>
+        <button onclick="triggerPoll(this)">Poll sensors now</button>
     </div>
     <div id="scan-result"></div>
 
@@ -108,6 +109,30 @@
                 .finally(() => {
                     btn.disabled = false;
                     btn.textContent = 'Scan for sensors';
+                });
+        }
+
+        function triggerPoll(btn) {
+            const resultDiv = document.getElementById('scan-result');
+            btn.disabled = true;
+            btn.textContent = 'Polling… (this can take a few minutes)';
+            resultDiv.textContent = '';
+
+            fetch('/poll', {method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        resultDiv.textContent = 'Error: ' + data.error;
+                    } else {
+                        resultDiv.textContent = `Polled ${data.polled} sensor(s) successfully: ${data.macs.join(', ')}`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.textContent = 'Error: ' + error;
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = 'Poll sensors now';
                 });
         }
 
